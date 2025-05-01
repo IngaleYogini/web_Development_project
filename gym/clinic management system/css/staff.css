@@ -1,0 +1,44 @@
+#staffList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#staffList li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+
+.staff-management {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+
+.staff-management form input {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+
+.staff-management button {
+    background-color: rgb(1, 1, 96);
+    height: 30px;
+    color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(1, 1, 96);
+    margin-left: 10px;
+}
+
+.staff-management button:hover {
+    background-color: rgb(3, 3, 150);
+}

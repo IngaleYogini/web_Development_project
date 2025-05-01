@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/patient_list.css">
+    <link rel="stylesheet" href="css/doctor-style.css">
+    <link rel="stylesheet" href="css/staff.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>RES</title>
+    <style>
+        .logo {
+            display: block;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+    <div class="logo">
+        <svg viewBox="0 0 300 150" class="curved-text">
+            <defs>
+                <path id="curve" d="M 50,150 A 100,100 0 0,1 250,150" />
+            </defs>
+            <text>
+                <textPath href="#curve" startOffset="50%" text-anchor="middle">
+                    Morya Dental Clinic
+                </textPath>
+            </text>
+        </svg>
+        <div class="circular-image">
+            <img src="./img/mdc.jpg" alt="Clinic Logo" />
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h2>Clinic Management System</h2>
+        <ul>
+            <li><a href="#"> Dashboard</a></li>
+            <li><a href="#patientList"> Appointments</a></li>
+            <li><a href="setting.html"> Settings</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <div class="user-info">
+                <img src="./img/admin.jpg" alt="User">
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <i class="fas fa-user-md"></i>
+                <h3 class="external-doctors-count">Loading...</h3>
+                <p>External Doctors</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-calendar-check"></i>
+                <h3 class="appointments-count">Loading...</h3>
+                <p>Appointments</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-calendar-check"></i>
+                <h3 class="attended-count">Loading...</h3>
+                <p>Attended</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-calendar-check"></i>
+                <h3 class="remaining-count">Loading...</h3>
+                <p>Remaining</p>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h2>Add Patients</h2>
+            <form id="patientForm">
+                <input type="text" id="patientName" placeholder="Enter Patient Name" required>
+                <input type="text" id="phnumber" placeholder="Phone Number" required>
+                <input type="text" id="city" placeholder="City" required>
+                <button type="submit" id="addPatient">Add Patient</button>
+            </form>
+
+            <div class="patient-list">
+                <h2>Patient List</h2>
+                <ul id="patientList">
+                    <!-- Patients will be listed here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBg5AXmG8VwxpFonWdefuj0CAw-Dgxyft4",
+    authDomain: "adddoc-cd904.firebaseapp.com",
+    databaseURL: "https://adddoc-cd904-default-rtdb.firebaseio.com",
+    projectId: "adddoc-cd904",
+    storageBucket: "adddoc-cd904.appspot.com",
+    messagingSenderId: "880570605246",
+    appId: "1:880570605246:web:b5dc1b1489bf68c29f88ef"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Add Patient to Realtime Database
+document.getElementById('patientForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    
+    let name = document.getElementById('patientName').value;
+    let phone = document.getElementById('phnumber').value;
+    let city = document.getElementById('city').value;
+
+    const patientsRef = ref(db, "patients");
+    const newPatientRef = push(patientsRef); // Generate a unique ID for each patient
+
+    set(newPatientRef, {
+        name: name,
+        phone: phone,
+        city: city
+    }).then(() => {
+        alert("Patient added successfully!");
+        document.getElementById('patientForm').reset();
+    }).catch(error => {
+        console.error("Error adding patient: ", error);
+    });
+});
+//doctor count
+
+// Load Patients from Realtime Database
+function loadPatients() {
+            const patientList = document.getElementById('patientList');
+            patientList.innerHTML = "Loading...";
+
+            onValue(ref(db, "patients"), (snapshot) => {
+                patientList.innerHTML = "";
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        let patient = childSnapshot.val();
+                        let patientId = childSnapshot.key;
+                        let li = document.createElement('li');
+
+                        li.innerHTML = `
+                            <strong>${patient.name}</strong> - ${patient.phone} (${patient.city})
+                            <button class="attend-btn" id="attend-${patientId}" ${patient.attended ? 'disabled' : ''}>
+                                ${patient.attended ? 'Attended' : ' Remaining'}
+                            </button>
+                            <button class="remove-btn" onclick="deletePatient('${patientId}')">Remove</button>
+                        `;
+
+                        patientList.appendChild(li);
+
+                        // Attach event listener dynamically
+                        document.getElementById(`attend-${patientId}`).addEventListener("click", function () {
+                            markAttended(patientId, this);
+                        });
+                    });
+
+                    updateCounts();
+                } else {
+                    patientList.innerHTML = "<li>No patients added yet.</li>";
+                }
+            });
+        }
+
+        // Function to Mark Patient as Attended
+        window.markAttended = function (id, button) {
+            console.log("Marking attended for patient ID:", id); // Debugging log
+
+            update(ref(db, "patients/" + id), { attended: true })
+                .then(() => {
+                    alert("Patient marked as attended!");
+                    button.innerText = "Attended";
+                    button.style.backgroundColor = "green";
+                    button.style.color = "white";
+                    button.disabled = true;
+                    loadPatients(); // Refresh UI
+                })
+                .catch((error) => {
+                    alert("Error updating patient: " + error.message);
+                });
+        };
+
+// Delete a Patient
+window.deletePatient = function (id) {
+    const patientRef = ref(db, "patients/" + id);
+    remove(patientRef).then(() => {
+        alert("Patient removed!");
+    }).catch(error => {
+        console.error("Error deleting patient:", error);
+    });
+}
+
+// Load patients on page load
+window.onload = loadPatients;
+// Function to Update Counts
+function updateCounts() {
+            const attendedCount = document.querySelector(".attended-count");
+            const remainingCount = document.querySelector(".remaining-count");
+            const appointmentsCount = document.querySelector(".appointments-count");
+
+            onValue(ref(db, "patients"), (snapshot) => {
+                let total = 0, attended = 0;
+
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        let patient = childSnapshot.val();
+                        total++;
+                        if (patient.attended) attended++;
+                    });
+                }
+
+                appointmentsCount.innerText = total;
+                attendedCount.innerText = attended;
+                remainingCount.innerText = total - attended;
+            });
+        }
+        //ExtDoc
+        function fetchExternalDoctorsCount() {
+    const externalDoctorsCount = document.querySelector(".external-doctors-count");
+
+    onValue(ref(db, "extDoc/"), (snapshot) => {
+        let count = snapshot.exists() ? snapshot.size : 0;
+        externalDoctorsCount.innerText = count;
+    });
+}
+
+// Call function on page load
+fetchExternalDoctorsCount();
+
+    </script>
+
+</body>
+
+</html>

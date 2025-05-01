@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Gym Management</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body style="background-color:honeydew;">
+    <div class="container-fluid">
+
+
+
+        <div class="row">
+            <div class="col-lg-12 bg-info">
+                <h1 style="color:black"> New FITNESS</h1>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-lg-7 " style="padding:20px; ">
+                <img src="image/newa.jpg" style="width:800px">
+            </div>
+
+
+            <div class="col-lg-5 " style="padding:20px;">
+                <div style="padding:20px;">
+                    <button class="btn btn-info btn-block">Admin Login</button>
+
+                    <form id="loginForm" class="mt-5">
+
+                        <label><b>Admin Name</b></label>
+                        <input type="text" name="adminname" required class="form-control" placeholder="Enter UserName">
+                        <label><b>Password</b></label>
+                        <input type="password" id="username" name="password" class="form-control"
+                            placeholder="Enter Password">
+                        <br>
+                        <input type="submit" id="password" name="submit" value="Login" class="btn btn-primary">
+                        <p class="error" id="loginError"></p>
+                        <a href="sign.html">SignIn</a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12 bg-warning">
+                <p align="center" style="color:black">Near Center Bank Of India</p>
+                <p align="center" style="color:black"> Vidyut Colony, Jalgaon, Maharashtra 425001</p>
+
+
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+    
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQbdMR4PiKrqaWqh74TE6XkS1p4dgXO5g",
+            authDomain: "gymmanagement-6a2d3.firebaseapp.com",
+            databaseURL: "https://gymmanagement-6a2d3-default-rtdb.firebaseio.com/",
+            projectId: "gymmanagement-6a2d3",
+            storageBucket: "gymmanagement-6a2d3.appspot.com",
+            messagingSenderId: "521194864869",
+            appId: "1:521194864869:web:695eb2505c551f1ca8540c",
+            measurementId: "G-GWRKK752ZX"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        // Handle login form submission
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+    
+            const usernameInput = document.querySelector("input[name='adminname']").value.trim();
+            const passwordInput = document.querySelector("input[name='password']").value.trim();
+            const loginError = document.getElementById("loginError");
+    
+            if (!usernameInput || !passwordInput) {
+                loginError.textContent = "Please enter both username and password!";
+                loginError.style.color = "red";
+                return;
+            }
+    
+            try {
+                // Reference the "users" collection
+                const usersRef = ref(db, "users");
+                const snapshot = await get(usersRef);
+    
+                if (snapshot.exists()) {
+                    let userFound = false;
+    
+                    snapshot.forEach((childSnapshot) => {
+                        const userData = childSnapshot.val();
+    
+                        if (userData.username === usernameInput && userData.password === passwordInput) {
+                            userFound = true;
+                            loginError.style.color = "green";
+                            loginError.textContent = "Login successful! Redirecting...";
+    
+                            // Redirect after 2 seconds
+                            setTimeout(() => {
+                                window.location.href = "adminhome.html";
+                            }, 2000);
+                        }
+                    });
+    
+                    if (!userFound) {
+                        loginError.textContent = "Invalid username or password!";
+                        loginError.style.color = "red";
+                    }
+                } else {
+                    loginError.textContent = "No users found!";
+                    loginError.style.color = "red";
+                }
+            } catch (error) {
+                loginError.textContent = "Error logging in!";
+                loginError.style.color = "red";
+            }
+        });
+    </script>
+    
+</body>
+
+</html>

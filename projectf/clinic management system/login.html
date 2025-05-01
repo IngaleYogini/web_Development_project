@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Morya Dental Clinic</title>
+   <style>
+    .logo {
+        display: block;
+        text-align: center;
+    }
+    .circular-image img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    .error {
+        color: red;
+        font-size: 14px;
+    }
+   </style>
+</head>
+<body>
+
+    <div class="logo">
+        <svg viewBox="0 0 300 150" class="curved-text">
+            <defs>
+                <path id="curve" d="M 50,150 A 100,100 0 0,1 250,150" />
+            </defs>
+            <text>
+                <textPath href="#curve" startOffset="50%" text-anchor="middle">
+                   Morya Dental Clinic
+                </textPath>
+            </text>
+        </svg>
+        <div class="circular-image">
+            <img src="./img/mdc.jpg" alt="Clinic Logo" />
+        </div>
+    </div>
+
+    <div class="login-form">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                    <div class="error" id="usernameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="error" id="passwordError"></div>
+                </div>
+                <button type="submit" class="btn" name="login">Login</button>
+                <p class="error" id="loginError"></p>
+                <a href="sign.html">Sign Up</a>
+                
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBg5AXmG8VwxpFonWdefuj0CAw-Dgxyft4",
+            authDomain: "adddoc-cd904.firebaseapp.com",
+            projectId: "adddoc-cd904",
+            storageBucket: "adddoc-cd904.appspot.com",
+            messagingSenderId: "880570605246",
+            appId: "1:880570605246:web:45ba3d8b12ff0d939f88ef"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Handle Login Form Submission
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const loginError = document.getElementById("loginError");
+
+            if (!username || !password) {
+                loginError.textContent = "Please enter both username and password!";
+                return;
+            }
+
+            try {
+                // Check if user exists in Firebase Database
+                const userRef = ref(db, "users/" + username);
+                const snapshot = await get(userRef);
+
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+
+                    if (userData.password === password) {
+                        loginError.style.color = "green";
+                        loginError.textContent = "Login successful! Redirecting...";
+
+                        // Redirect to doctor.html after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = "doctor.html";
+                        }, 2000);
+                    } else {
+                        loginError.textContent = "Incorrect password!";
+                    }
+                } else {
+                    loginError.textContent = "Username not found!";
+                }
+            } catch (error) {
+                loginError.textContent = "Error logging in!";
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+
+#patientList, #staffList {
+    list-style-type: none;
+    padding: 0;
+    
+}
+
+#patientList li{
+    border: 2px solid rgb(1, 1, 96);
+    border-radius: 5px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+}
+#pati_list li, #staffList li {
+    background-color: #f9f9f9;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+
+#pati_list, .staff-management {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+
+#pati_list form input, .staff-management form input {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+
+#pati_list button, .staff-management button {
+    background-color: rgb(1, 1, 96);
+    height: 30px;
+    color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(1, 1, 96);
+    margin-left: 10px;
+}
+
+#pati_list button:hover, .staff-management button:hover {
+    background-color: rgb(3, 3, 150);
+}
+
+.delete-btn {
+    margin-left: 700px;
+    padding: 5px 10px;
+    background-color: rgb(1, 1, 96);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: rgb(3, 3, 150);
+}
+/*patient form*/
+.form-container {
+    background-color: #f9f9f9;
+     padding: 10px;
+     margin: 5px 0;
+     border-radius: 5px;
+     border: 2px solid rgb(1, 1, 96);
+     font-size: 16px;
+ }
+ .form-container button{
+     background-color: rgb(1, 1, 96);
+     color: white;
+     border-radius: 10px;
+     border: 1px solid rgb(1, 1, 96);
+ }
+ .form-container button:hover{
+     background-color: rgb(3, 3, 150);
+ }
+ .form-container input,
+ .form-container button {
+     margin: 10px 5px;
+     border: 2px solid rgb(1, 1, 96);
+     border-radius: 5px;
+     padding: 10px;
+ }
+ 

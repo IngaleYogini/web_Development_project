@@ -1,0 +1,63 @@
+#doctor_list{
+    list-style-type: none;
+    padding: 0;
+   
+}
+#doctor_list li{
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    padding-left: 10px;
+    border-radius: 5px;
+    margin-left: -40px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+#doctorsList{
+    list-style-type: none;
+}
+.external-doctors{
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+.remove-btn {
+    background-color: rgb(1, 1, 96);
+    height: 30px;
+    color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(1, 1, 96);
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.remove-btn:hover {
+    background-color: rgb(3, 3, 150);
+}
+.external-doctors form input{
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 2px solid rgb(1, 1, 96);
+    font-size: 16px;
+}
+.external-doctors button{
+    background-color: rgb(1, 1, 96);
+    height: 30px;
+    color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(1, 1, 96);
+    margin-left: 10px;
+}
+.external-doctors button:hover{
+    background-color: rgb(3, 3, 150);
+}
+#ext_doc{
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
